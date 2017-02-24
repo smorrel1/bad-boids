@@ -14,11 +14,12 @@ import random
 import numpy as np
 import yaml
 
+radius = 100
 def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boids=50, x_vel_min=0.0, x_vel_max=10.0,
                       y_vel_min=-20.0, y_vel_max=20.0):
   # boids_x = [random.uniform(-450, 50.0) for x in range(n_boids)]
   boids_x = np.random.rand(n_boids)*(x_max-x_min)+x_min
-  boids_y = [random.uniform(300.0, 600.0) for x in range(n_boids)]
+  # boids_y = [random.uniform(300.0, 600.0) for x in range(n_boids)]
   boids_y = np.random.rand(n_boids)*(y_max-y_min)+y_min
   # boid_x_velocities = [random.uniform(0, 10.0) for x in range(n_boids)]
   boid_x_velocities = np.random.rand(n_boids)*(x_vel_max-x_vel_min) + x_vel_min
@@ -42,9 +43,17 @@ def update_boids(boids):
   # Fly away from nearby boids
   for i in range(len(xs)):
     for j in range(len(xs)):
-      if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < 100:
-        xvs[i] = xvs[i] + (xs[i] - xs[j])
-        yvs[i] = yvs[i] + (ys[i] - ys[j])
+      distance = (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2
+      
+      def flee(speed, me, they):
+        return speed + (me-they)
+      if distance < radius:
+        # xvs[i] = xvs[i] + (xs[i] - xs[j])
+        # yvs[i] = yvs[i] + (ys[i] - ys[j])
+        xvs[i] = flee(xvs[i], xs[i], xs[j])
+        yvs[i] = flee(yvs[i], ys[i], ys[j])
+
+
   # Try to match speed with nearby boids
   for i in range(len(xs)):
     for j in range(len(xs)):
