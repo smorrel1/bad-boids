@@ -1,6 +1,6 @@
 """
 Args:
-  a config.yaml containing 9 parammeters
+  a config.yml containing 9 parammeters
   x_min x_max y_min y_max n_boids x_vel_min x_vel_max y_vel_min y_vel_max
   """
 # TODO:  Replace magic numbers with constants, Replace repeated code with a function
@@ -57,7 +57,7 @@ def update_boids(boids):
     xs[i] = xs[i] + xvs[i]
     ys[i] = ys[i] + yvs[i]
 
-flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yaml"))
+flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
 boids = instantiate_boids(**flark)
 # boids = instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boids=50, x_vel_min=0.0, x_vel_max=10.0,
 #                       y_vel_min=-20.0, y_vel_max=20.0)

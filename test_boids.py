@@ -23,7 +23,7 @@ def test_instantiate_boids_speeds():
 
 # test non-standard values from config file
 def test_instantiate_boids_nonstandard():
-  flark = yaml.load(open(os.path.join(os.path.dirname(__file__), "config.yaml")))
+  flark = yaml.load(open(os.path.join(os.path.dirname(__file__), "config.yml")))
   boids_x, boids_y, boid_x_velocities, boid_y_velocities = boids.instantiate_boids(**flark)
   assert_greater_equal(min(boids_x), flark['x_min'], 'x_min failed')
   assert_less_equal(max(boids_x), flark['x_max'], 'x_max failed')
