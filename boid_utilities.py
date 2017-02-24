@@ -30,8 +30,8 @@ def dont_crash(xvs, xs, yvs, ys, flark_params):
         yvs[i] = flee(yvs[i], ys[i], ys[j])
   return xvs, yvs
 
+# Try to match speed with nearby boids
 def match_speed(xvs, xs, yvs, ys, flark_params):
-  # Try to match speed with nearby boids
   flock_size = len(xs)
   for i in range(flock_size):
     for j in range(flock_size):
@@ -43,9 +43,16 @@ def match_speed(xvs, xs, yvs, ys, flark_params):
         yvs[i] = move_towards(yvs[i], yvs[j])
   return xvs, yvs
 
-  # Move according to velocities
+# Move according to velocities
 def fly_a_bit(velocities_x, positions_x, velocities_y, positions_y):
   for i in range(len(positions_x)):
     positions_x[i] = positions_x[i] + velocities_x[i]
     positions_y[i] = positions_y[i] + velocities_y[i]
   return positions_x, positions_y
+
+def update_boids(boids, flark_params):
+  positions_x, positions_y, velocities_x, velocities_y = boids
+  velocities_x, velocities_y = fly_to_middle(velocities_x, positions_x, velocities_y, positions_y)
+  velocities_x, velocities_y = dont_crash(velocities_x, positions_x, velocities_y, positions_y, flark_params)
+  velocities_x, velocities_y = match_speed(velocities_x, positions_x, velocities_y, positions_y, flark_params)
+  positions_x, positions_y = fly_a_bit(velocities_x, positions_x, velocities_y, positions_y)
