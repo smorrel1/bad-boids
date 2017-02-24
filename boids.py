@@ -46,7 +46,6 @@ def update_boids(boids):
         xvs[i] = flee(xvs[i], xs[i], xs[j])
         yvs[i] = flee(yvs[i], ys[i], ys[j])
 
-
   # Try to match speed with nearby boids
   for i in range(len(xs)):
     for j in range(len(xs)):
