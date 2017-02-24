@@ -39,7 +39,8 @@ def test_instantiate_boids_nonstandard():
 def test_bad_boids_regression():
   regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixture.yml')))
   boid_data = regression_data["before"]
-  boids.update_boids(boid_data)
+  flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
+  boids.update_boids(boid_data, flark_params=flark_params)
   for after, before in zip(regression_data["after"], boid_data):
     for after_value, before_value in zip(after, before):
       assert_almost_equal(after_value, before_value, delta=0.01)
