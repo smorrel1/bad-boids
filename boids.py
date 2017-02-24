@@ -16,6 +16,7 @@ import yaml
 
 radius_bump = 100
 radius_attraction = 10000
+affinity = 0.125
 def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boids=50, x_vel_min=0.0, x_vel_max=10.0,
                       y_vel_min=-20.0, y_vel_max=20.0):
   boids_x = np.random.rand(n_boids)*(x_max-x_min)+x_min
@@ -37,8 +38,9 @@ def fly_to_middle(velocities_x, positions_x,velocities_y, positions_y):
 def dont_crash(xvs, xs, yvs, ys):
   def flee(speed, me, they):
     return speed + (me - they)
-  for i in range(len(xs)):
-    for j in range(len(xs)):
+  flock_size = len(xs)
+  for i in range(flock_size):
+    for j in range(flock_size):
       distance = (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2
       if distance < radius_bump:
         xvs[i] = flee(xvs[i], xs[i], xs[j])
@@ -47,23 +49,30 @@ def dont_crash(xvs, xs, yvs, ys):
 
 def match_speed(xvs, xs, yvs, ys):
   # Try to match speed with nearby boids
-  for i in range(len(xs)):
-    for j in range(len(xs)):
-      if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < radius_attraction:
-        xvs[i] = xvs[i] + (xvs[j] - xvs[i]) * 0.125 / len(xs)
-        yvs[i] = yvs[i] + (yvs[j] - yvs[i]) * 0.125 / len(xs)
+  flock_size = len(xs)
+  for i in range(flock_size):
+    for j in range(flock_size):
+      distance = (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2
+      def move_towards(me, they):
+        return me + (they - me) * affinity / flock_size
+      if distance < radius_attraction:
+        xvs[i] = move_towards(xvs[i], xvs[j])
+        yvs[i] = move_towards(yvs[i], yvs[j])
   return xvs, yvs
 
-def update_boids(boids):
-  xs, ys, xvs, yvs = boids
-  xvs, yvs = fly_to_middle(xvs, xs, yvs, ys)
-  xvs, yvs = dont_crash(xvs, xs, yvs, ys)
-  xvs, yvs = match_speed(xvs, xs, yvs, ys)
+  # Move according to velocities
+def fly_a_bit(velocities_x, positions_x, velocities_y, positions_y):
+  for i in range(len(positions_x)):
+    positions_x[i] = positions_x[i] + velocities_x[i]
+    positions_y[i] = positions_y[i] + velocities_y[i]
+  return positions_x, positions_y
 
-    # Move according to velocities
-  for i in range(len(xs)):
-    xs[i] = xs[i] + xvs[i]
-    ys[i] = ys[i] + yvs[i]
+def update_boids(boids):
+  positions_x, positions_y, velocities_x, velocities_y = boids
+  velocities_x, velocities_y = fly_to_middle(velocities_x, positions_x, velocities_y, positions_y)
+  velocities_x, velocities_y = dont_crash(velocities_x, positions_x, velocities_y, positions_y)
+  velocities_x, velocities_y = match_speed(velocities_x, positions_x, velocities_y, positions_y)
+  positions_x, positions_y = fly_a_bit(velocities_x, positions_x, velocities_y, positions_y)
 
 flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
 boids = instantiate_boids(**flark)
