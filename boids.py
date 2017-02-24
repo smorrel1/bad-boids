@@ -1,12 +1,10 @@
 """
-A deliberately bad implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406)
-for use as an exercise on refactoring.
-"""
+Args:
+  a config.yaml containing 9 parammeters
+  x_min x_max y_min y_max n_boids x_vel_min x_vel_max y_vel_min y_vel_max
+  """
 # TODO:  Replace magic numbers with constants, Replace repeated code with a function
 # TODO:  Change of variable/function/class name, Replace loop with iterator
-# TODO:  Replace hand-written code with library code
-# TODO:  Replace set of arrays with array of structures
-# TODO:  Replace constants with a configuration file
 # TODO:  Replace global variables with function arguments, Break a large function into smaller units
 # TODO:  Separate code concepts into files or modules
 # TODO: use assert statements
@@ -16,7 +14,6 @@ import random
 import numpy as np
 import yaml
 
-# Deliberately terrible code for teaching purposes
 def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boids=50, x_vel_min=0.0, x_vel_max=10.0,
                       y_vel_min=-20.0, y_vel_max=20.0):
   # boids_x = [random.uniform(-450, 50.0) for x in range(n_boids)]
@@ -33,12 +30,15 @@ def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boid
 def update_boids(boids):
   xs, ys, xvs, yvs = boids
   # Fly towards the middle
-  for i in range(len(xs)):
-    for j in range(len(xs)):
-      xvs[i] = xvs[i] + (xs[j] - xs[i]) * 0.01 / len(xs)
-  for i in range(len(xs)):
-    for j in range(len(xs)):
-      yvs[i] = yvs[i] + (ys[j] - ys[i]) * 0.01 / len(xs)
+  def update_velocities(velocities, positions):
+    for i in range(len(positions)):
+      for j in range(len(positions)):
+        velocities[i] = velocities[i] + (positions[j] - positions[i]) * 0.01 / len(positions)
+    return velocities
+
+  xvs = update_velocities(xvs, xs)
+  yvs = update_velocities(yvs, ys)
+
   # Fly away from nearby boids
   for i in range(len(xs)):
     for j in range(len(xs)):
