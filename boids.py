@@ -45,20 +45,19 @@ def dont_crash(xvs, xs, yvs, ys):
         yvs[i] = flee(yvs[i], ys[i], ys[j])
   return xvs, yvs
 
+def match_speed(xvs, xs, yvs, ys):
+  # Try to match speed with nearby boids
+  for i in range(len(xs)):
+    for j in range(len(xs)):
+      if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < radius_attraction:
+        xvs[i] = xvs[i] + (xvs[j] - xvs[i]) * 0.125 / len(xs)
+        yvs[i] = yvs[i] + (yvs[j] - yvs[i]) * 0.125 / len(xs)
+  return xvs, yvs
+
 def update_boids(boids):
   xs, ys, xvs, yvs = boids
   xvs, yvs = fly_to_middle(xvs, xs, yvs, ys)
   xvs, yvs = dont_crash(xvs, xs, yvs, ys)
-
-  def match_speed(xvs, xs, yvs, ys):
-    # Try to match speed with nearby boids
-    for i in range(len(xs)):
-      for j in range(len(xs)):
-        if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < radius_attraction:
-          xvs[i] = xvs[i] + (xvs[j] - xvs[i]) * 0.125 / len(xs)
-          yvs[i] = yvs[i] + (yvs[j] - yvs[i]) * 0.125 / len(xs)
-    return xvs, yvs
-
   xvs, yvs = match_speed(xvs, xs, yvs, ys)
 
     # Move according to velocities
