@@ -20,7 +20,7 @@ flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.12
 def update_boids(boids, flark_params):
   positions_x, positions_y, velocities_x, velocities_y = boids
   velocities_x, velocities_y = fly_to_middle(velocities_x, positions_x, velocities_y, positions_y)
-  velocities_x, velocities_y = dont_crash(velocities_x, positions_x, velocities_y, positions_y, flark_params['radius_bump'])
+  velocities_x, velocities_y = dont_crash(velocities_x, positions_x, velocities_y, positions_y, flark_params)
   velocities_x, velocities_y = match_speed(velocities_x, positions_x, velocities_y, positions_y, flark_params)
   positions_x, positions_y = fly_a_bit(velocities_x, positions_x, velocities_y, positions_y)
 

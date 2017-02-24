@@ -18,14 +18,14 @@ def fly_to_middle(velocities_x, positions_x,velocities_y, positions_y):
   return velocities_x, velocities_y
 
 # Fly away from nearby boids
-def dont_crash(xvs, xs, yvs, ys, radius_bump):
+def dont_crash(xvs, xs, yvs, ys, flark_params):
   def flee(speed, me, they):
     return speed + (me - they)
   flock_size = len(xs)
   for i in range(flock_size):
     for j in range(flock_size):
       distance = (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2
-      if distance < radius_bump:
+      if distance < flark_params['radius_bump']:
         xvs[i] = flee(xvs[i], xs[i], xs[j])
         yvs[i] = flee(yvs[i], ys[i], ys[j])
   return xvs, yvs
