@@ -24,6 +24,7 @@ def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boid
   boids = (boids_x, boids_y, boid_x_velocities, boid_y_velocities)
   return boids
 
+# change each bird's velocity towards the centre of the flock
 def fly_to_middle(velocities_x, positions_x,velocities_y, positions_y):
   for i in range(len(positions_x)):
     for j in range(len(positions_x)):
@@ -31,20 +32,22 @@ def fly_to_middle(velocities_x, positions_x,velocities_y, positions_y):
       velocities_y[i] = velocities_y[i] + (positions_y[j] - positions_y[i]) * 0.01 / len(positions_y)
   return velocities_x, velocities_y
 
-def update_boids(boids):
-  xs, ys, xvs, yvs = boids
-  xvs, yvs = fly_to_middle(xvs, xs, yvs, ys)
-
-  # Fly away from nearby boids
+# Fly away from nearby boids
+def maybe_flee(xvs, xs, yvs, ys):
+  def flee(speed, me, they):
+    return speed + (me - they)
   for i in range(len(xs)):
     for j in range(len(xs)):
       distance = (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2
-
-      def flee(speed, me, they):
-        return speed + (me-they)
       if distance < radius:
         xvs[i] = flee(xvs[i], xs[i], xs[j])
         yvs[i] = flee(yvs[i], ys[i], ys[j])
+  return xvs, yvs
+
+def update_boids(boids):
+  xs, ys, xvs, yvs = boids
+  xvs, yvs = fly_to_middle(xvs, xs, yvs, ys)
+  xvs, yvs = maybe_flee(xvs, xs, yvs, ys)
 
   # Try to match speed with nearby boids
   for i in range(len(xs)):
