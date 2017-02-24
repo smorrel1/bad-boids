@@ -21,22 +21,23 @@ def boids():
     update_boids(boids, flark_params=flark_params)
     scatter.set_offsets(zip(boids[0], boids[1]))
 
-  # parser = argparse.ArgumentParser(description='Calculate greenery between two points.')
-  # parser.add_argument('--from', dest='start', type=str, default=start,
-  #                     help='Origin location name.')
-  # parser.add_argument('--to', dest='end', type=str, default=end,
-  #                     help='Destination location name')
-  # parser.add_argument('--steps', dest='steps', type=int, default=steps,
-  #                     help='Number of steps from origin to destination')
-  # parser.add_argument('--out', dest='output_file', type=str, default=output_file,
-  #                     help='Output file name for graph in png format')
-  # args = parser.parse_args()  # produces Namespace()
+  flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
+  flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
+  parser = argparse.ArgumentParser(description='parameters to fly the boids')
+  parser.add_argument('--radius_bump', dest='radius_bump', type=int, default=100,
+                      help='how far each bird is from another before it must fly away')
+  parser.add_argument('--radius_attraction', dest='radius_attraction', type=int, default=10000,
+                      help='The radius within which the bird is attracted to others in the flock')
+  parser.add_argument('--affinity', dest='affinity', type=float, default=0.125,
+                      help='The strength of attraction to other birds within the radius_attraction')
+  args = parser.parse_args()  # produces Namespace()
   # print(args)  # remove
+  flark_params['radius_bump'] = args.radius_bump
+  flark_params['radius_attraction'] = args.radius_attraction
+  flark_params['affinity'] = args.affinity
   # # Check input
   # if args.steps < 1:
   #   raise ValueError("Number of steps " + str(args.steps) + " must be at least 1")
-  flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
-  flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
   boids = instantiate_boids(**flark)
   figure = plt.figure()
   axes = plt.axes(xlim=(-500, 1500), ylim=(-500, 1500))
