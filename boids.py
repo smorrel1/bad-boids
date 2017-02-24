@@ -24,17 +24,16 @@ def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boid
   boids = (boids_x, boids_y, boid_x_velocities, boid_y_velocities)
   return boids
 
+def fly_to_middle(velocities_x, positions_x,velocities_y, positions_y):
+  for i in range(len(positions_x)):
+    for j in range(len(positions_x)):
+      velocities_x[i] = velocities_x[i] + (positions_x[j] - positions_x[i]) * 0.01 / len(positions_x)
+      velocities_y[i] = velocities_y[i] + (positions_y[j] - positions_y[i]) * 0.01 / len(positions_y)
+  return velocities_x, velocities_y
+
 def update_boids(boids):
   xs, ys, xvs, yvs = boids
-  # Fly towards the middle
-  def update_velocities(velocities, positions):
-    for i in range(len(positions)):
-      for j in range(len(positions)):
-        velocities[i] = velocities[i] + (positions[j] - positions[i]) * 0.01 / len(positions)
-    return velocities
-
-  xvs = update_velocities(xvs, xs)
-  yvs = update_velocities(yvs, ys)
+  xvs, yvs = fly_to_middle(xvs, xs, yvs, ys)
 
   # Fly away from nearby boids
   for i in range(len(xs)):
