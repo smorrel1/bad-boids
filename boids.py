@@ -2,13 +2,20 @@
 A deliberately bad implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406)
 for use as an exercise on refactoring.
 """
-
+# TODO: use assert statements
+# TODO:  Replace magic numbers with constants, Replace repeated code with a function
+# TODO:  Change of variable/function/class name, Replace loop with iterator
+# TODO:  Replace hand-written code with library code
+# TODO:  Replace set of arrays with array of structures
+# TODO:  Replace constants with a configuration file
+# TODO:  Replace global variables with function arguments, Break a large function into smaller units
+# TODO:  Separate code concepts into files or modules
 from matplotlib import pyplot as plt
 from matplotlib import animation
 import random
 
 # Deliberately terrible code for teaching purposes
-
+# instantiate boids
 boids_x = [random.uniform(-450, 50.0) for x in range(50)]
 boids_y = [random.uniform(300.0, 600.0) for x in range(50)]
 boid_x_velocities = [random.uniform(0, 10.0) for x in range(50)]
