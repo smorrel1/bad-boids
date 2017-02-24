@@ -10,7 +10,14 @@ def test_instantiate_boids():
   boids_x, boids_y, boid_x_velocities, boid_y_velocities = my_boids
   assert_greater_equal(min(boids_x), -450.0, 'x_min failed')
   assert_less_equal(max(boids_x), 50, 'x_max failed')
+  assert_greater_equal(min(boids_y), 300.0, 'y_min failed')
+  assert_less_equal(max(boids_y), 600, 'y_max failed')
 
+def test_instantiate_boids_speeds():
+  my_boids=boids.instantiate_boids()
+  boids_x, boids_y, boid_x_velocities, boid_y_velocities = my_boids
+  assert_greater_equal(min(boid_x_velocities), 0.0, 'x_min_velocities failed')
+  assert_less_equal(max(boid_x_velocities), 10., 'x_max_velocities failed')
 
 # test boids move by <= 0.01
 def test_bad_boids_regression():
