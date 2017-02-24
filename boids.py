@@ -14,7 +14,8 @@ import random
 import numpy as np
 import yaml
 
-radius = 100
+radius_bump = 100
+radius_attraction = 10000
 def instantiate_boids(x_min=-450.0, x_max=50.0, y_min=300.0, y_max=600.0, n_boids=50, x_vel_min=0.0, x_vel_max=10.0,
                       y_vel_min=-20.0, y_vel_max=20.0):
   boids_x = np.random.rand(n_boids)*(x_max-x_min)+x_min
@@ -33,13 +34,13 @@ def fly_to_middle(velocities_x, positions_x,velocities_y, positions_y):
   return velocities_x, velocities_y
 
 # Fly away from nearby boids
-def maybe_flee(xvs, xs, yvs, ys):
+def dont_crash(xvs, xs, yvs, ys):
   def flee(speed, me, they):
     return speed + (me - they)
   for i in range(len(xs)):
     for j in range(len(xs)):
       distance = (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2
-      if distance < radius:
+      if distance < radius_bump:
         xvs[i] = flee(xvs[i], xs[i], xs[j])
         yvs[i] = flee(yvs[i], ys[i], ys[j])
   return xvs, yvs
@@ -47,15 +48,20 @@ def maybe_flee(xvs, xs, yvs, ys):
 def update_boids(boids):
   xs, ys, xvs, yvs = boids
   xvs, yvs = fly_to_middle(xvs, xs, yvs, ys)
-  xvs, yvs = maybe_flee(xvs, xs, yvs, ys)
+  xvs, yvs = dont_crash(xvs, xs, yvs, ys)
 
-  # Try to match speed with nearby boids
-  for i in range(len(xs)):
-    for j in range(len(xs)):
-      if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < 10000:
-        xvs[i] = xvs[i] + (xvs[j] - xvs[i]) * 0.125 / len(xs)
-        yvs[i] = yvs[i] + (yvs[j] - yvs[i]) * 0.125 / len(xs)
-  # Move according to velocities
+  def match_speed(xvs, xs, yvs, ys):
+    # Try to match speed with nearby boids
+    for i in range(len(xs)):
+      for j in range(len(xs)):
+        if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < radius_attraction:
+          xvs[i] = xvs[i] + (xvs[j] - xvs[i]) * 0.125 / len(xs)
+          yvs[i] = yvs[i] + (yvs[j] - yvs[i]) * 0.125 / len(xs)
+    return xvs, yvs
+
+  xvs, yvs = match_speed(xvs, xs, yvs, ys)
+
+    # Move according to velocities
   for i in range(len(xs)):
     xs[i] = xs[i] + xvs[i]
     ys[i] = ys[i] + yvs[i]
