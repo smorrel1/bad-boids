@@ -18,8 +18,23 @@ def test_instantiate_boids_speeds():
   boids_x, boids_y, boid_x_velocities, boid_y_velocities = my_boids
   assert_greater_equal(min(boid_x_velocities), 0.0, 'x_min_velocities failed')
   assert_less_equal(max(boid_x_velocities), 10., 'x_max_velocities failed')
-  assert_greater_equal(min(boid_y_velocities), -20.0, 'x_min_velocities failed')
-  assert_less_equal(max(boid_y_velocities), 20., 'x_max_velocities failed')
+  assert_greater_equal(min(boid_y_velocities), -20.0, 'y_min_velocities failed')
+  assert_less_equal(max(boid_y_velocities), 20., 'y_max_velocities failed')
+
+# test non-standard values from config file
+def test_instantiate_boids_nonstandard():
+  flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yaml"))
+  my_boids=boids.instantiate_boids(**flark)
+  boids_x, boids_y, boid_x_velocities, boid_y_velocities = my_boids
+  assert_greater_equal(min(boids_x), flark['x_min'], 'x_min failed')
+  assert_less_equal(max(boids_x), flark['x_max'], 'x_max failed')
+  assert_greater_equal(min(boids_y), flark['y_min'], 'y_min failed')
+  assert_less_equal(max(boids_y), flark['y_max'], 'y_max failed')
+  assert_greater_equal(min(boid_x_velocities), flark['x_vel_min'], 'x_min_velocities failed')
+  assert_less_equal(max(boid_x_velocities), flark['x_vel_max'], 'x_max_velocities failed')
+  assert_greater_equal(min(boid_y_velocities), flark['y_vel_min'], 'y_min_velocities failed')
+  assert_less_equal(max(boid_y_velocities), flark['y_vel_max'], 'y_max_velocities failed')
+
 
 # test boids move by <= 0.01
 def test_bad_boids_regression():
