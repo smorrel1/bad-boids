@@ -11,21 +11,38 @@ Args:
 # TODO: Replace loop with iterator
 from matplotlib import pyplot as plt
 from matplotlib import animation
-import numpy as np
 import yaml
 from boid_utilities import *
+import argparse
 
-def animate(frame):
-  update_boids(boids, flark_params=flark_params)
-  scatter.set_offsets(zip(boids[0], boids[1]))
+def boids():
 
-flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
-flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
-boids = instantiate_boids(**flark)
-figure = plt.figure()
-axes = plt.axes(xlim=(-500, 1500), ylim=(-500, 1500))
-scatter = axes.scatter(boids[0], boids[1])
-anim = animation.FuncAnimation(figure, animate, frames=50, interval=50)
+  def animate(frame):
+    update_boids(boids, flark_params=flark_params)
+    scatter.set_offsets(zip(boids[0], boids[1]))
+
+  # parser = argparse.ArgumentParser(description='Calculate greenery between two points.')
+  # parser.add_argument('--from', dest='start', type=str, default=start,
+  #                     help='Origin location name.')
+  # parser.add_argument('--to', dest='end', type=str, default=end,
+  #                     help='Destination location name')
+  # parser.add_argument('--steps', dest='steps', type=int, default=steps,
+  #                     help='Number of steps from origin to destination')
+  # parser.add_argument('--out', dest='output_file', type=str, default=output_file,
+  #                     help='Output file name for graph in png format')
+  # args = parser.parse_args()  # produces Namespace()
+  # print(args)  # remove
+  # # Check input
+  # if args.steps < 1:
+  #   raise ValueError("Number of steps " + str(args.steps) + " must be at least 1")
+  flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
+  flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
+  boids = instantiate_boids(**flark)
+  figure = plt.figure()
+  axes = plt.axes(xlim=(-500, 1500), ylim=(-500, 1500))
+  scatter = axes.scatter(boids[0], boids[1])
+  anim = animation.FuncAnimation(figure, animate, frames=50, interval=50)
+  plt.show()
 
 if __name__ == "__main__":
-  plt.show()
+  boids()
