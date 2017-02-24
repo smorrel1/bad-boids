@@ -31,13 +31,9 @@ def boids():
   parser.add_argument('--affinity', dest='affinity', type=float, default=0.125,
                       help='The strength of attraction to other birds within the radius_attraction')
   args = parser.parse_args()  # produces Namespace()
-  # print(args)  # remove
   flark_params['radius_bump'] = args.radius_bump
   flark_params['radius_attraction'] = args.radius_attraction
   flark_params['affinity'] = args.affinity
-  # # Check input
-  # if args.steps < 1:
-  #   raise ValueError("Number of steps " + str(args.steps) + " must be at least 1")
   boids = instantiate_boids(**flark)
   figure = plt.figure()
   axes = plt.axes(xlim=(-500, 1500), ylim=(-500, 1500))
