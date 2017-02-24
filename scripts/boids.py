@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 This plots a flock of [50] birds flocking. Flying rules are each bird flys towards the middle of the flock, doesn't
 crash into its neighbours and matches the speed of more distant neighbours.
@@ -14,9 +15,8 @@ import numpy as np
 import yaml
 from boid_utilities import *
 
-flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
-
 flark = yaml.load(open("/Users/stephenmorrell/git/bad-boids/config.yml"))
+flark_params = {'radius_bump': 100, 'radius_attraction': 10000, 'affinity': 0.125}
 boids = instantiate_boids(**flark)
 figure = plt.figure()
 axes = plt.axes(xlim=(-500, 1500), ylim=(-500, 1500))
