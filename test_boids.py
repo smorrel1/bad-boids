@@ -1,10 +1,16 @@
 import boids
 from nose.tools import assert_almost_equal
+from nose.tools import assert_greater_equal
+from nose.tools import assert_less_equal
 import os
 import yaml
 
 def test_instantiate_boids():
   my_boids=boids.instantiate_boids()
+  boids_x, boids_y, boid_x_velocities, boid_y_velocities = my_boids
+  assert_greater_equal(min(boids_x), -450.0, 'x_min failed')
+  assert_less_equal(max(boids_x), 50, 'x_max failed')
+
 
 # test boids move by <= 0.01
 def test_bad_boids_regression():
